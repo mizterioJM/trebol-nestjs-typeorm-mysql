@@ -4,6 +4,7 @@ import {
   ManyToOne,
   JoinColumn,
   OneToMany,
+  JoinTable,
 } from 'typeorm';
 import { BaseModel } from '../../../shared/base.model';
 import { Jaula } from '../../jaula/entity/jaula.entity';
@@ -58,6 +59,6 @@ export class Servicio extends BaseModel {
     eager: true,
     nullable: true,
   })
-  @JoinColumn()
+  @JoinTable()
   img_detail: ImgDetail[];
 }

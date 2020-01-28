@@ -23,22 +23,22 @@ export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':userId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  // @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  // @UseGuards(AuthGuard(), RoleGuard)
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
     return this._userService.get(userId);
   }
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  // @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  // @UseGuards(AuthGuard(), RoleGuard)
   getUsers(): Promise<ReadUserDto[]> {
     return this._userService.getAll();
   }
 
   @Patch(':userId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  // @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  // @UseGuards(AuthGuard(), RoleGuard)
   updateUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() user: Partial<UpdateUserDto>,
@@ -47,15 +47,13 @@ export class UserController {
   }
 
   @Delete(':userId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
-  @UseGuards(AuthGuard(), RoleGuard)
+  // @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  // @UseGuards(AuthGuard(), RoleGuard)
   deleteUser(@Param('userId', ParseIntPipe) userId: number): Promise<void> {
     return this._userService.delete(userId);
   }
 
   @Post('agregarRol/:userId/:roleId')
-  @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   setRoleToUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Param('roleId', ParseIntPipe) roleId: number,

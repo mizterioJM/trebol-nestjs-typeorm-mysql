@@ -2,10 +2,11 @@ import { IsNumber, IsNotEmpty, IsObject } from 'class-validator';
 import { Ruta } from '../../ruta/entity/ruta.entity';
 import { Jaula } from '../../jaula/entity/jaula.entity';
 import { User } from '../../user/entity/user.entity';
+import { ImgDetail } from '../entity/servicio-img-detail.entity';
 
 export class CreateServicioDto {
   @IsNotEmpty()
-  readonly ruta_id: Ruta;
+  readonly ruta: Ruta;
 
   @IsNotEmpty()
   readonly jaula: Jaula;
@@ -19,5 +20,5 @@ export class CreateServicioDto {
   @IsNotEmpty()
   readonly apoyoB?: User;
 
-  readonly image: string;
+  readonly image: ImgDetail[];
 }

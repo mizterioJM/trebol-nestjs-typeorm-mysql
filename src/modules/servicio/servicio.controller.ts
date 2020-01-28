@@ -12,28 +12,14 @@ import {
   UploadedFiles,
 } from '@nestjs/common';
 import { ServicioService } from './servicio.service';
-import {
-  ReadServicioDto,
-  CreateServicioDto,
-  UpdateServicioDto,
-  CreateServicioImgDto,
-} from './dto';
+import { ReadServicioDto, CreateServicioDto, UpdateServicioDto } from './dto';
 import { AuthGuard } from '@nestjs/passport';
 import { FilesInterceptor } from '@nestjs/platform-express';
-import { ConfigService } from '../../config/config.service';
-import { Configuration } from '../../config/config.enum';
-
-// tslint:disable-next-line: no-var-requires
-const Cloudinary = require('cloudinary');
 
 @Controller('servicio')
 @UseGuards(AuthGuard())
 export class ServicioController {
-  images_details: CreateServicioImgDto[] = [];
-  constructor(
-    private readonly _servicioService: ServicioService,
-    private readonly _configService: ConfigService,
-  ) {}
+  constructor(private readonly _servicioService: ServicioService) {}
 
   @Get(':servId')
   getServicio(
@@ -49,15 +35,11 @@ export class ServicioController {
 
   @Post()
   @UseInterceptors(FilesInterceptor('image', 5))
-  async createServicio(
+  createServicio(
     @Body() servicio: Partial<CreateServicioDto>,
-    @UploadedFiles() files,
+    @UploadedFiles() files: any,
   ): Promise<ReadServicioDto> {
-    console.log(servicio);
-    const paths = await this.cloudinaryConfig(files);
-    if (!paths) {
-      return;
-    }
+    return this._servicioService.createServicio(servicio, files);
   }
 
   @Patch(':servId')
@@ -71,21 +53,5 @@ export class ServicioController {
   @Delete(':servId')
   deleteServicio(@Param('servId', ParseIntPipe) servId: number): Promise<void> {
     return this._servicioService.deleteServicio(servId);
-  }
-
-  async cloudinaryConfig(files: any): Promise<any[]> {
-    const pathImages = await files.map(file => file.path);
-
-    if (!pathImages) {
-      return;
-    }
-
-    Cloudinary.config({
-      cloud_name: this._configService.get(Configuration.CLOUD_NAME),
-      api_key: this._configService.get(Configuration.CLOUD_API_KEY),
-      api_secret: this._configService.get(Configuration.CLOUD_API_SECRET),
-    });
-
-    return pathImages;
   }
 }

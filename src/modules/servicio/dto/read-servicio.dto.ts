@@ -3,6 +3,7 @@ import { ReadServicioJaulaDto } from './read-servicio-jaula.dto';
 import { ReadServicioUserDto } from './read-servicio-user.dto';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { IsNumber, IsDate } from 'class-validator';
+import { ReadServicioImgDetailDto } from './read-servicio-img-detail.sto';
 
 @Exclude()
 export class ReadServicioDto {
@@ -29,6 +30,10 @@ export class ReadServicioDto {
   @Expose()
   @Type(type => ReadServicioUserDto)
   readonly apoyoB: ReadServicioUserDto;
+
+  @Expose()
+  @Type(type => ReadServicioImgDetailDto)
+  readonly img_detail: ReadServicioImgDetailDto[];
 
   @Expose()
   @IsDate()

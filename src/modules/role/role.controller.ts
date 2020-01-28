@@ -36,8 +36,6 @@ export class RoleController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN)
-  @UseGuards(AuthGuard(), RoleGuard)
   createRole(@Body() role: Partial<CreateRoleDto>): Promise<ReadRoleDto> {
     return this._roleService.create(role);
   }

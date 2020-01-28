@@ -31,8 +31,6 @@ export class JaulaController {
   }
 
   @Get()
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
-  @UseGuards(AuthGuard(), RoleGuard)
   getJaulas(): Promise<ReadJaulaDto[]> {
     return this._jaulaService.getJaulas();
   }
