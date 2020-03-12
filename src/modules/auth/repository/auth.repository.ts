@@ -10,7 +10,14 @@ import { genSalt, hash } from 'bcryptjs';
 @EntityRepository(User)
 export class AuthRepository extends Repository<User> {
   async register(registroDto: RegistroDto) {
-    const { nDocument, password, name, lastname, fecha_nac } = registroDto;
+    const {
+      nDocument,
+      password,
+      name,
+      lastname,
+      chofer,
+      fecha_nac,
+    } = registroDto;
 
     // SE CREA NUEVO USER
     const user = new User();
@@ -25,6 +32,7 @@ export class AuthRepository extends Repository<User> {
       where: { name: RoleType.GENERAL },
     });
 
+    user.chofer = chofer;
     user.roles = [defaultRole];
 
     // SE CREA NUEVO DETALLE DE USUARIO

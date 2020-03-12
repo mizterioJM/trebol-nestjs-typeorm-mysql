@@ -9,4 +9,7 @@ export class CreateServicioImgDto {
 
   @IsString()
   secure_url?: string;
+
+  @IsString()
+  base64?: string;
 }

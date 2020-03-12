@@ -13,4 +13,8 @@ export class ReadServicioImgDetailDto {
 
   @IsString()
   readonly secure_url?: string;
+
+  @Expose()
+  @IsString()
+  readonly base64?: string;
 }

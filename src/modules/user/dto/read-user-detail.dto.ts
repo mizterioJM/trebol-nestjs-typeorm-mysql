@@ -1,5 +1,5 @@
 import { Exclude, Expose } from 'class-transformer';
-import { IsString } from 'class-validator';
+import { IsString, IsDateString } from 'class-validator';
 
 @Exclude()
 export class ReadUserDetailDto {
@@ -10,4 +10,8 @@ export class ReadUserDetailDto {
   @IsString()
   @Expose()
   readonly lastname: string;
+
+  @IsDateString()
+  @Expose()
+  readonly fechaNac: Date;
 }

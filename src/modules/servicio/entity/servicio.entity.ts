@@ -5,40 +5,49 @@ import {
   JoinColumn,
   OneToMany,
   JoinTable,
+  Column,
 } from 'typeorm';
 import { BaseModel } from '../../../shared/base.model';
 import { Jaula } from '../../jaula/entity/jaula.entity';
 import { Ruta } from '../../ruta/entity/ruta.entity';
 import { User } from '../../user/entity/user.entity';
 import { ImgDetail } from './servicio-img-detail.entity';
+import { Vehicle } from '../../vehicle/entity/vehicle.entity';
 
 @Entity('servicios')
 export class Servicio extends BaseModel {
   @PrimaryGeneratedColumn('increment')
   id: number;
 
-  @ManyToOne(type => Ruta, ruta => ruta.servicios, {
+  @ManyToOne((type) => Ruta, (ruta) => ruta.servicios, {
     cascade: true,
     eager: true,
   })
   @JoinColumn({ name: 'ruta_id' })
   ruta: Ruta;
 
-  @ManyToOne(type => Jaula, jaula => jaula.servicios, {
+  @ManyToOne((type) => Jaula, (jaula) => jaula.servicios, {
     cascade: true,
     eager: true,
   })
   @JoinColumn({ name: 'jaula_id' })
   jaula: Jaula;
 
-  @ManyToOne(type => User, user => user.servicio, {
+  @ManyToOne((type) => Vehicle, (vehicle) => vehicle.servicio, {
+    cascade: true,
+    eager: true,
+  })
+  @JoinColumn({ name: 'vehicle_id' })
+  vehicle: Vehicle;
+
+  @ManyToOne((type) => User, (user) => user.servicio, {
     cascade: true,
     eager: true,
   })
   @JoinColumn({ name: 'chofer_id' })
   chofer: User;
 
-  @ManyToOne(type => User, user => user.servicio, {
+  @ManyToOne((type) => User, (user) => user.servicio, {
     cascade: true,
     eager: true,
     nullable: true,
@@ -46,7 +55,7 @@ export class Servicio extends BaseModel {
   @JoinColumn({ name: 'apoyoA_id' })
   apoyoA: User;
 
-  @ManyToOne(type => User, user => user.servicio, {
+  @ManyToOne((type) => User, (user) => user.servicio, {
     cascade: true,
     eager: true,
     nullable: true,
@@ -54,11 +63,14 @@ export class Servicio extends BaseModel {
   @JoinColumn({ name: 'apoyoB_id' })
   apoyoB: User;
 
-  @OneToMany(type => ImgDetail, imgDetail => imgDetail.servicio, {
+  @OneToMany((type) => ImgDetail, (imgDetail) => imgDetail.servicio, {
     cascade: true,
     eager: true,
     nullable: true,
   })
   @JoinTable()
-  img_detail: ImgDetail[];
+  img_detail: ImgDetail;
+
+  @Column()
+  fecha_reg: string;
 }

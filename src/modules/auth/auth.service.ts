@@ -2,7 +2,6 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { AuthRepository } from './repository/auth.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -42,20 +41,24 @@ export class AuthService {
       where: { nDocument },
     });
 
-    if (!user) {
-      throw new NotFoundException('El Documento no existe');
+    const roleId = user.roles.map((role) => {
+      return role.id;
+    });
+
+    if (!(roleId[0] === 1) && !(user.chofer == true)) {
+      throw new NotFoundException('No tienes los Credenciales para Ingresar');
     }
 
     const isMatch = await compare(password, user.password);
 
-    if (!isMatch) {
-      throw new UnauthorizedException('Credenciales Invalida');
+    if (!user || !isMatch) {
+      throw new NotFoundException('Credenciales Invalidos');
     }
 
     const payload: IJwtPayload = {
       id: user.id,
       nDocument: user.nDocument,
-      roles: user.roles.map(r => r.name as RoleType),
+      roles: user.roles.map((r) => r.name as RoleType),
     };
 
     const token = await this._jwtService.sign(payload);

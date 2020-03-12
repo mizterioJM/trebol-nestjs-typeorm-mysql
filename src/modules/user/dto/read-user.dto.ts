@@ -1,4 +1,4 @@
-import { IsNumber, IsString } from 'class-validator';
+import { IsNumber, IsString, IsBoolean } from 'class-validator';
 import { ReadUserDetailDto } from './read-user-detail.dto';
 import { Type, Exclude, Expose } from 'class-transformer';
 import { ReadUserRoleDto } from './read-user-role.dto';
@@ -11,13 +11,17 @@ export class ReadUserDto {
 
   @Expose()
   @IsString()
-  readonly n_document: string;
+  readonly nDocument: string;
 
   @Expose()
-  @Type(type => ReadUserDetailDto)
+  @IsBoolean()
+  readonly chofer: boolean;
+
+  @Expose()
+  @Type((type) => ReadUserDetailDto)
   readonly details: ReadUserDetailDto;
 
   @Expose()
-  @Type(type => ReadUserRoleDto)
+  @Type((type) => ReadUserRoleDto)
   readonly roles: ReadUserRoleDto[];
 }

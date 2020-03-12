@@ -2,12 +2,12 @@ import { Exclude, Expose } from 'class-transformer';
 import { IsString, IsNumber } from 'class-validator';
 
 @Exclude()
-export class ReadServicioJaulaDto {
+export class ReadServicioVehicleDto {
   @Expose()
   @IsNumber()
   readonly id: number;
 
   @Expose()
   @IsString()
-  readonly code: string;
+  readonly placa: string;
 }

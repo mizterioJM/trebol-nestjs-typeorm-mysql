@@ -33,6 +33,11 @@ export class ServicioController {
     return this._servicioService.getServicios();
   }
 
+  @Get('fech/:date')
+  getServicioFecha(@Param('date') date: string) {
+    return this._servicioService.getServicioFecha(date);
+  }
+
   @Post()
   @UseInterceptors(FilesInterceptor('image', 5))
   createServicio(
@@ -45,8 +50,8 @@ export class ServicioController {
   @Patch(':servId')
   updateServicio(
     @Param('servId', ParseIntPipe) servId: number,
-    servicio: Partial<UpdateServicioDto>,
-  ): Promise<ReadServicioDto> {
+    @Body() servicio: Partial<UpdateServicioDto>,
+  ) {
     return this._servicioService.updateService(servId, servicio);
   }
 

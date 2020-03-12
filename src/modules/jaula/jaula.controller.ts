@@ -22,11 +22,9 @@ export class JaulaController {
   constructor(private readonly _jaulaService: JaulaService) {}
 
   @Get(':jaulaId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
-  getJaula(
-    @Param('jaulaId', ParseIntPipe) jaulaId: number,
-  ): Promise<ReadJaulaDto> {
+  getJaula(@Param('jaulaId', ParseIntPipe) jaulaId: number): Promise<ReadJaulaDto> {
     return this._jaulaService.getJaula(jaulaId);
   }
 
@@ -36,14 +34,14 @@ export class JaulaController {
   }
 
   @Post()
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
   createJaula(@Body() jaula: Partial<CreateJaulaDto>): Promise<ReadJaulaDto> {
     return this._jaulaService.createJaula(jaula);
   }
 
   @Patch(':jaulaId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
   updateJaula(
     @Param('jaulaId', ParseIntPipe) jaulaId: number,
@@ -53,7 +51,7 @@ export class JaulaController {
   }
 
   @Delete(':jaulaId')
-  @Roles(RoleType.ADMIN, RoleType.SUPERVISOR)
+  @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
   deleteJaula(@Param('jaulaId', ParseIntPipe) jaulaId: number): Promise<void> {
     return this._jaulaService.deleteJaula(jaulaId);

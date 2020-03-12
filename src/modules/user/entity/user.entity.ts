@@ -31,11 +31,14 @@ export class User extends BaseModel {
   @Column({ type: 'varchar', nullable: false })
   password: string;
 
-  @ManyToMany(type => Role, role => role.users, { eager: true })
+  @Column({ type: 'boolean', nullable: false })
+  chofer: boolean;
+
+  @ManyToMany((type) => Role, (role) => role.users, { eager: true })
   @JoinTable({ name: 'user_roles' })
   roles: Role[];
 
-  @OneToOne(type => UserDetails, {
+  @OneToOne((type) => UserDetails, {
     cascade: true,
     nullable: false,
     eager: true,
@@ -44,8 +47,8 @@ export class User extends BaseModel {
   details: UserDetails;
 
   @OneToMany(
-    type => Servicio,
-    servicio => [servicio.chofer, servicio.apoyoA, servicio.apoyoB],
+    (type) => Servicio,
+    (servicio) => [servicio.chofer, servicio.apoyoA, servicio.apoyoB],
   )
   servicio: Servicio[];
 

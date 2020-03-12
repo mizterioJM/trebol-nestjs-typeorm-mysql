@@ -4,6 +4,7 @@ import { ReadServicioUserDto } from './read-servicio-user.dto';
 import { Exclude, Expose, Type } from 'class-transformer';
 import { IsNumber, IsDate } from 'class-validator';
 import { ReadServicioImgDetailDto } from './read-servicio-img-detail.sto';
+import { ReadServicioVehicleDto } from './read-servicio-vehicle.dto';
 
 @Exclude()
 export class ReadServicioDto {
@@ -12,30 +13,34 @@ export class ReadServicioDto {
   readonly id: number;
 
   @Expose()
-  @Type(type => ReadServicioRutaDto)
+  @Type((type) => ReadServicioRutaDto)
   readonly ruta: ReadServicioRutaDto;
 
   @Expose()
-  @Type(type => ReadServicioJaulaDto)
+  @Type((type) => ReadServicioJaulaDto)
   readonly jaula: ReadServicioJaulaDto;
 
   @Expose()
-  @Type(type => ReadServicioUserDto)
+  @Type((type) => ReadServicioVehicleDto)
+  readonly vehicle: ReadServicioVehicleDto;
+
+  @Expose()
+  @Type((type) => ReadServicioUserDto)
   readonly chofer: ReadServicioUserDto;
 
   @Expose()
-  @Type(type => ReadServicioUserDto)
+  @Type((type) => ReadServicioUserDto)
   readonly apoyoA: ReadServicioUserDto;
 
   @Expose()
-  @Type(type => ReadServicioUserDto)
+  @Type((type) => ReadServicioUserDto)
   readonly apoyoB: ReadServicioUserDto;
 
   @Expose()
-  @Type(type => ReadServicioImgDetailDto)
+  @Type((type) => ReadServicioImgDetailDto)
   readonly img_detail: ReadServicioImgDetailDto[];
 
   @Expose()
   @IsDate()
-  readonly createAt: Date;
+  readonly fecha_reg: String;
 }

@@ -14,4 +14,6 @@ export class RegistroDto {
   lastname: string;
 
   fecha_nac?: Date;
+
+  chofer: boolean;
 }

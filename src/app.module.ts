@@ -12,6 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { JaulaModule } from './modules/jaula/jaula.module';
 import { RutaModule } from './modules/ruta/ruta.module';
 import { ServicioModule } from './modules/servicio/servicio.module';
+import { VehicleModule } from './modules/vehicle/vehicle.module';
 @Module({
   imports: [
     ConfigModule,
@@ -22,6 +23,7 @@ import { ServicioModule } from './modules/servicio/servicio.module';
     JaulaModule,
     RutaModule,
     ServicioModule,
+    VehicleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

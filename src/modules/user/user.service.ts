@@ -12,6 +12,7 @@ import { plainToClass } from 'class-transformer';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { RoleRepository } from '../role/repository/role.repository';
 import { UserDetails } from './entity/user.details.entity';
+import { ReadUserFechaDto } from './dto/read-user-fecha-dto';
 
 @Injectable()
 export class UserService {
@@ -38,9 +39,17 @@ export class UserService {
     return plainToClass(ReadUserDto, user);
   }
 
-  async getAll(): Promise<ReadUserDto[]> {
+  async getAllChofer(): Promise<ReadUserDto[]> {
     const users: User[] = await this._userRepository.find({
-      where: { status: Status.ACTIVO },
+      where: { status: Status.ACTIVO, chofer: true },
+    });
+
+    return users.map((user: User) => plainToClass(ReadUserDto, user));
+  }
+
+  async getAllApoyo(): Promise<ReadUserDto[]> {
+    const users: User[] = await this._userRepository.find({
+      where: { status: Status.ACTIVO, chofer: false },
     });
 
     return users.map((user: User) => plainToClass(ReadUserDto, user));
@@ -59,11 +68,13 @@ export class UserService {
     }
 
     foundUser.nDocument = user.nDocument;
+    foundUser.chofer = user.chofer;
 
     const updateDetails = new UserDetails();
 
     updateDetails.name = user.details.name;
     updateDetails.lastname = user.details.lastname;
+    updateDetails.fechaNac = user.details.fechaNac;
 
     foundUser.details = updateDetails;
 
@@ -83,25 +94,71 @@ export class UserService {
     await this._userRepository.update(userId, { status: Status.INACTIVO });
   }
 
-  async setRoleToUser(userId: number, roleId: number): Promise<boolean> {
-    const userExist = await this._userRepository.findOne(userId, {
-      where: { status: Status.ACTIVO },
-    });
+  async getDiasTrabajadosChofer(
+    fecha_ini: string,
+    fecha_fin: string,
+  ): Promise<ReadUserFechaDto[]> {
+    const trab_dias = await this._userRepository
+      .createQueryBuilder('u')
+      .select('u.id', 'id')
+      .addSelect('d.name', 'nombre')
+      .addSelect('d.lastname', 'apellido')
+      .addSelect('COUNT(s.chofer_id)', 'dias')
+      .innerJoin('servicios', 's', 'u.id = s.chofer_id')
+      .innerJoin('users_details', 'd', 'u.detail_id = d.id')
+      .where('s.fecha_reg >= :fecha_ini', { fecha_ini })
+      .andWhere('s.fecha_reg <= :fecha_fin', { fecha_fin })
+      .groupBy('nombre')
+      .addGroupBy('apellido')
+      .addGroupBy('id')
+      .getRawMany()
+      .finally();
 
-    if (!userExist) {
-      throw new NotFoundException();
-    }
-
-    const roleExist = await this._roleRepository.findOne(roleId, {
-      where: { status: Status.ACTIVO },
-    });
-
-    if (!roleExist) {
-      throw new NotFoundException('el rol no existe');
-    }
-
-    userExist.roles.push(roleExist);
-
-    return (await this._userRepository.save(userExist)) ? true : false;
+    return trab_dias.map((dia) => plainToClass(ReadUserFechaDto, dia));
   }
+
+  async getDiasTrabajadosApoyo(
+    fecha_ini: string,
+    fecha_fin: string,
+  ): Promise<ReadUserFechaDto[]> {
+    const trab_dias = await this._userRepository
+      .createQueryBuilder('u')
+      .select('u.id', 'id')
+      .addSelect('d.name', 'nombre')
+      .addSelect('d.lastname', 'apellido')
+      .addSelect('COUNT(s.apoyoA_id)', 'dias')
+      .innerJoin('servicios', 's', 'u.id = s.apoyoA_id')
+      .innerJoin('users_details', 'd', 'u.detail_id = d.id')
+      .where('s.fecha_reg >= :fecha_ini', { fecha_ini })
+      .andWhere('s.fecha_reg <= :fecha_fin', { fecha_fin })
+      .groupBy('nombre')
+      .addGroupBy('apellido')
+      .addGroupBy('id')
+      .getRawMany()
+      .finally();
+
+    return trab_dias.map((dia) => plainToClass(ReadUserFechaDto, dia));
+  }
+
+  // async setRoleToUser(userId: number, roleId: number): Promise<boolean> {
+  //   const userExist = await this._userRepository.findOne(userId, {
+  //     where: { status: Status.ACTIVO },
+  //   });
+
+  //   if (!userExist) {
+  //     throw new NotFoundException();
+  //   }
+
+  //   const roleExist = await this._roleRepository.findOne(roleId, {
+  //     where: { status: Status.ACTIVO },
+  //   });
+
+  //   if (!roleExist) {
+  //     throw new NotFoundException('el rol no existe');
+  //   }
+
+  //   userExist.roles.push(roleExist);
+
+  //   return (await this._userRepository.save(userExist)) ? true : false;
+  // }
 }

@@ -14,6 +14,8 @@ import { Configuration } from '../../config/config.enum';
 import { ServicioGaleryRepository } from './repository/servicio-galey.repository';
 import { ImgDetail } from './entity/servicio-img-detail.entity';
 
+import * as moment from 'moment';
+
 // tslint:disable-next-line: no-var-requires
 const Cloudinary = require('cloudinary');
 
@@ -42,7 +44,16 @@ export class ServicioService {
   }
 
   async getServicios(): Promise<ReadServicioDto[]> {
-    const servicios = await this._servicioRepository.find({
+    const servicios = await this._servicioRepository.find();
+
+    return servicios.map((servicio: Servicio) =>
+      plainToClass(ReadServicioDto, servicio),
+    );
+  }
+
+  async getServicioFecha(date: string): Promise<ReadServicioDto[]> {
+    const servicios: Servicio[] = await this._servicioRepository.find({
+      where: { fecha_reg: date },
       relations: ['img_detail'],
     });
 
@@ -55,20 +66,20 @@ export class ServicioService {
     servicio: Partial<CreateServicioDto>,
     files: any,
   ): Promise<ReadServicioDto> {
-    const pathsImg = await this.cloudinaryConfig(files);
-
     const newServicio = new Servicio();
 
     newServicio.ruta = servicio.ruta;
     newServicio.jaula = servicio.jaula;
+    newServicio.vehicle = servicio.vehicle;
     newServicio.chofer = servicio.chofer;
     newServicio.apoyoA = servicio.apoyoA;
     newServicio.apoyoB = servicio.apoyoB;
+    newServicio.fecha_reg = moment().format('YYYY-MM-DD');
 
     const createServicio = await this._servicioRepository.save(newServicio);
-
-    if (pathsImg.length) {
-      pathsImg.forEach(async pathImg => {
+    const pathsImg = await this.cloudinaryConfig(files);
+    if (pathsImg) {
+      pathsImg.forEach(async (pathImg) => {
         const result = await Cloudinary.v2.uploader.upload(pathImg);
 
         const newImgDetail = new ImgDetail();
@@ -81,8 +92,20 @@ export class ServicioService {
         const createImgDetail = await this._servicioGaleyRepository.save(
           newImgDetail,
         );
-        newServicio.img_detail = [createImgDetail];
+        newServicio.img_detail = createImgDetail;
       });
+    }
+    if (servicio.img_detail.base64) {
+      const newImgDetail = new ImgDetail();
+
+      newImgDetail.base64 = servicio.img_detail.base64;
+      newImgDetail.servicio = createServicio;
+
+      const createImgDetail = await this._servicioGaleyRepository.save(
+        newImgDetail,
+      );
+
+      newServicio.img_detail = createImgDetail;
     }
 
     if (!createServicio) {
@@ -100,25 +123,20 @@ export class ServicioService {
       throw new BadRequestException('Id necesario');
     }
 
-    const existService = await this._servicioRepository.findOne(servId);
-
+    const existService = await this._servicioRepository.update(
+      servId,
+      servicio,
+    );
+    console.log(existService);
     if (!existService) {
       throw new NotFoundException('Servicio no existe');
     }
 
-    existService.ruta = servicio.ruta;
-    existService.jaula = servicio.jaula;
-    existService.chofer = servicio.chofer;
-    existService.apoyoA = servicio.apoyoA;
-    existService.apoyoB = servicio.apoyoB;
-
-    const updateServicio = await this._servicioRepository.save(existService);
-
-    if (!updateServicio) {
+    if (!existService) {
       throw new InternalServerErrorException();
     }
 
-    return plainToClass(ReadServicioDto, updateServicio);
+    return plainToClass(ReadServicioDto, existService);
   }
 
   async deleteServicio(servId: number): Promise<void> {
@@ -134,11 +152,11 @@ export class ServicioService {
   }
 
   async cloudinaryConfig(files: any): Promise<[]> {
-    const pathImages: [] = await files.map((file: any) => file.path);
-
-    if (!pathImages) {
+    if (!files) {
       return;
     }
+
+    const pathImages: [] = await files.map((file: any) => file.path);
 
     Cloudinary.config({
       cloud_name: this._configService.get(Configuration.CLOUD_NAME),

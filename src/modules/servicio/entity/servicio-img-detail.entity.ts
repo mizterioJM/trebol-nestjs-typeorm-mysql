@@ -28,7 +28,13 @@ export class ImgDetail extends BaseModel {
   })
   secure_url?: string;
 
-  @ManyToOne(type => Servicio, servicio => servicio.img_detail, {
+  @Column({
+    nullable: true,
+    type: 'longtext',
+  })
+  base64?: string;
+
+  @ManyToOne((type) => Servicio, (servicio) => servicio.img_detail, {
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'servicio_id' })

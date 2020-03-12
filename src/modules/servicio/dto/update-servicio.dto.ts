@@ -1,24 +1,24 @@
-import { IsNumber, IsNotEmpty } from 'class-validator';
+import { IsNumber, IsNotEmpty, IsString } from 'class-validator';
 import { Ruta } from '../../ruta/entity/ruta.entity';
 import { Jaula } from '../../jaula/entity/jaula.entity';
 import { User } from '../../user/entity/user.entity';
 
 export class UpdateServicioDto {
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   ruta: Ruta;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   jaula: Jaula;
 
-  @IsNumber()
+  @IsString()
   @IsNotEmpty()
   chofer: User;
 
-  @IsNumber()
+  @IsString()
   apoyoA?: User;
 
-  @IsNumber()
+  @IsString()
   apoyoB?: User;
 }

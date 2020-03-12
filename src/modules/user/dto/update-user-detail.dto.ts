@@ -8,5 +8,5 @@ export class UpdateUserDetailDto {
   lastname: string;
 
   @IsDate()
-  fecha_nac: Date;
+  fechaNac?: Date;
 }
