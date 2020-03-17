@@ -5,7 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AuthRepository } from './repository/auth.repository';
 import { ConfigService } from '../../config/config.service';
 import { JwtStrategy } from './strategies/jwt-strategy';
-import { PassportModule, AuthGuard } from '@nestjs/passport';
+import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule } from '../../config/config.module';
 import { Configuration } from '../../config/config.enum';
