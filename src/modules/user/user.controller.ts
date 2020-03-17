@@ -24,29 +24,29 @@ export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':userId')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
     return this._userService.get(userId);
   }
 
   @Get('/filtro/chofer')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   getallChofer(): Promise<ReadUserDto[]> {
     return this._userService.getAllChofer();
   }
 
   @Get('/filtro/apoyo')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   getallApoyo(): Promise<ReadUserDto[]> {
     return this._userService.getAllApoyo();
   }
 
   @Patch(':userId')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   updateUser(
     @Param('userId', ParseIntPipe) userId: number,
     @Body() user: Partial<UpdateUserDto>,
@@ -55,13 +55,15 @@ export class UserController {
   }
 
   @Delete(':userId')
-  // @Roles(RoleType.ADMIN)
-  // @UseGuards(AuthGuard(), RoleGuard)
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   deleteUser(@Param('userId', ParseIntPipe) userId: number): Promise<void> {
     return this._userService.delete(userId);
   }
 
   @Get('/chofer/fecha/:f_ini/:f_fin')
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   getDiasTrabajoChofer(
     @Param('f_ini') f_ini: string,
     @Param('f_fin') f_fin: string,
@@ -70,6 +72,8 @@ export class UserController {
   }
 
   @Get('/apoyo/fecha/:f_ini/:f_fin')
+  @Roles(RoleType.ADMIN)
+  @UseGuards(AuthGuard(), RoleGuard)
   getDiasTrabajoApoyo(
     @Param('f_ini') f_ini: string,
     @Param('f_fin') f_fin: string,

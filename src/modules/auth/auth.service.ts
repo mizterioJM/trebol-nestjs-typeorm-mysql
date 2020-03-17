@@ -41,6 +41,10 @@ export class AuthService {
       where: { nDocument },
     });
 
+    if (!user) {
+      throw new NotFoundException('No tienes los Credenciales para Ingresar');
+    }
+
     const roleId = user.roles.map((role) => {
       return role.id;
     });
