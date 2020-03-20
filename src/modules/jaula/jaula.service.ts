@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { JaulaRepository } from './repository/jaula.repository';
 import { ReadJaulaDto, CreateJaulaDto, UpdateJaulaDto } from './dto';
@@ -58,7 +62,7 @@ export class JaulaService {
     });
 
     if (!existeJaula) {
-      throw new NotFoundException('No existe');
+      throw new NotFoundException('Codigo de Jaula no existe');
     }
 
     existeJaula.code = jaula.code;
@@ -75,7 +79,7 @@ export class JaulaService {
     });
 
     if (!existJaula) {
-      throw new NotFoundException();
+      throw new NotFoundException('Codigo Jaula no existe');
     }
 
     await this._jaulaRepository.update(jaulaId, {

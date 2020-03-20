@@ -29,6 +29,7 @@ export class ConfigService {
         CLOUD_NAME: process.env.CLOUD_NAME,
         CLOUD_API_KEY: process.env.CLOUD_API_KEY,
         CLOUD_API_SECRET: process.env.CLOUD_API_SECRET,
+        TYPEORM_SYNC: process.env.TYPEORM_SYNC,
       };
     }
   }

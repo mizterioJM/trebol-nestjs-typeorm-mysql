@@ -1,4 +1,8 @@
-import { Injectable, BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  BadRequestException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { VehicleRepository } from './repository/vehicle.repository';
 import { ReadVehicleDto, CreateVehicleDto, UpdateVehicleDto } from './dto';
@@ -15,7 +19,7 @@ export class VehicleService {
 
   async getVehicle(vehicleId: number): Promise<ReadVehicleDto> {
     if (!vehicleId) {
-      throw new BadRequestException();
+      throw new BadRequestException('Id del Vehiculo requerido');
     }
 
     const existVehicle = await this._vehicleRepository.findOne(vehicleId, {
@@ -23,7 +27,7 @@ export class VehicleService {
     });
 
     if (!existVehicle) {
-      throw new NotFoundException();
+      throw new NotFoundException('No existe Vehiculo');
     }
 
     return plainToClass(ReadVehicleDto, existVehicle);
@@ -34,14 +38,26 @@ export class VehicleService {
       where: { status: Status.ACTIVO },
     });
 
-    return vehicles.map((vehicle: Vehicle) => plainToClass(ReadVehicleDto, vehicle));
+    return vehicles.map((vehicle: Vehicle) =>
+      plainToClass(ReadVehicleDto, vehicle),
+    );
   }
 
-  async createVehicle(vehicle: Partial<CreateVehicleDto>): Promise<ReadVehicleDto> {
+  async createVehicle(
+    vehicle: Partial<CreateVehicleDto>,
+  ): Promise<ReadVehicleDto> {
     const { placa } = vehicle;
 
     if (!placa) {
       throw new BadRequestException('Placa quererida');
+    }
+
+    const existeVehicle = await this._vehicleRepository.find({
+      where: { placa },
+    });
+
+    if (existeVehicle) {
+      throw new NotFoundException('La PLACA ya existe');
     }
 
     const saveVehicle = await this._vehicleRepository.save(vehicle);
@@ -54,7 +70,7 @@ export class VehicleService {
     vehicle: Partial<UpdateVehicleDto>,
   ): Promise<ReadVehicleDto> {
     if (!vehicleId) {
-      throw new BadRequestException();
+      throw new BadRequestException('Id del vehiculo es quererido');
     }
 
     const existVehicle = await this._vehicleRepository.findOne(vehicleId, {
@@ -62,7 +78,7 @@ export class VehicleService {
     });
 
     if (!existVehicle) {
-      throw new NotFoundException();
+      throw new NotFoundException('No existe el Vehiculo');
     }
 
     existVehicle.placa = vehicle.placa;

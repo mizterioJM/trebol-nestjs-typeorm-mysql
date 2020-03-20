@@ -2,15 +2,15 @@ import { IsString, IsNotEmpty } from 'class-validator';
 
 export class RegistroDto {
   @IsString()
-  @IsNotEmpty()
   nDocument: string;
 
   @IsString()
-  @IsNotEmpty()
   password: string;
 
+  @IsString()
   name: string;
 
+  @IsString()
   lastname: string;
 
   fecha_nac?: Date;

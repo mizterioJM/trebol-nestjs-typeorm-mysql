@@ -37,7 +37,7 @@ export class ServicioService {
     const existServicio = await this._servicioRepository.findOne(servId);
 
     if (!existServicio) {
-      throw new NotFoundException('No existe');
+      throw new NotFoundException('El servicio no existe');
     }
 
     return plainToClass(ReadServicioDto, existServicio);
@@ -120,7 +120,7 @@ export class ServicioService {
     servicio: Partial<UpdateServicioDto>,
   ): Promise<ReadServicioDto> {
     if (!servId) {
-      throw new BadRequestException('Id necesario');
+      throw new BadRequestException('Id del SERVICIO es necesario');
     }
 
     const existService = await this._servicioRepository.update(
@@ -129,7 +129,7 @@ export class ServicioService {
     );
     console.log(existService);
     if (!existService) {
-      throw new NotFoundException('Servicio no existe');
+      throw new NotFoundException('El SERVICIO no existe');
     }
 
     if (!existService) {
@@ -141,13 +141,13 @@ export class ServicioService {
 
   async deleteServicio(servId: number): Promise<void> {
     if (!servId) {
-      throw new BadRequestException('Id requerido');
+      throw new BadRequestException('Id del SERIVICIO es requerido');
     }
 
     const existServicio = await this._servicioRepository.delete(servId);
 
     if (!existServicio) {
-      throw new NotFoundException('No existe registro del servicio');
+      throw new NotFoundException('NO existe el SERVICIO');
     }
   }
 

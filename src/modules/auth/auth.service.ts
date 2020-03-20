@@ -2,6 +2,7 @@ import {
   Injectable,
   ConflictException,
   NotFoundException,
+  BadRequestException,
 } from '@nestjs/common';
 import { AuthRepository } from './repository/auth.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,7 +29,7 @@ export class AuthService {
     });
 
     if (userExist) {
-      throw new ConflictException('El Documento ya existe');
+      throw new BadRequestException('El Documento ya existe');
     }
 
     return this._authRepository.register(registroDto);
@@ -37,12 +38,20 @@ export class AuthService {
   async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { nDocument, password } = loginDto;
 
+    if (!nDocument) {
+      throw new BadRequestException('Documento es necesario');
+    }
+
+    if (!password) {
+      throw new BadRequestException('La Contraseña es necesaria');
+    }
+
     const user: User = await this._authRepository.findOne({
       where: { nDocument },
     });
 
     if (!user) {
-      throw new NotFoundException('No tienes los Credenciales para Ingresar');
+      throw new NotFoundException('Documento INVALIDO');
     }
 
     const roleId = user.roles.map((role) => {
@@ -56,7 +65,7 @@ export class AuthService {
     const isMatch = await compare(password, user.password);
 
     if (!user || !isMatch) {
-      throw new NotFoundException('Credenciales Invalidos');
+      throw new NotFoundException('Documento y/o Contraseña INCORRECTA');
     }
 
     const payload: IJwtPayload = {

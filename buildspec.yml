@@ -4,7 +4,10 @@ phases:
   install:
     commands:
       - npm install
-      - pip install --upgrade awscli
+    finally:
+      - echo finaliza instalacion
   build:
     commands:
       - npm run build
+    finally:
+      - echo finaliza construccion

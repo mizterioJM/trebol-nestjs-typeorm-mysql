@@ -19,7 +19,7 @@ export class RutaService {
 
   async getRuta(rutaId: number): Promise<ReadRutaDto> {
     if (!rutaId) {
-      throw new BadRequestException();
+      throw new BadRequestException('Id de la RUTA es REQUERIDA');
     }
 
     const existRuta = await this._rutaRepository.findOne(rutaId, {
@@ -27,7 +27,7 @@ export class RutaService {
     });
 
     if (!existRuta) {
-      throw new NotFoundException();
+      throw new NotFoundException('No existe la RUTA');
     }
 
     return plainToClass(ReadRutaDto, existRuta);
@@ -58,7 +58,7 @@ export class RutaService {
     ruta: Partial<UpdateRutaDto>,
   ): Promise<ReadRutaDto> {
     if (!rutaId) {
-      throw new BadRequestException();
+      throw new BadRequestException('ID de la ruta es requerida');
     }
 
     const existRuta = await this._rutaRepository.findOne(rutaId, {
@@ -66,7 +66,7 @@ export class RutaService {
     });
 
     if (!existRuta) {
-      throw new NotFoundException();
+      throw new NotFoundException(' No existe la RUTA');
     }
 
     existRuta.name = ruta.name;
@@ -79,12 +79,16 @@ export class RutaService {
 
   async deleteRuta(rutaId: number): Promise<void> {
     if (!rutaId) {
-      throw new BadRequestException();
+      throw new NotFoundException('Id de la RUTA es requerida');
     }
 
     const existRuta = await this._rutaRepository.findOne(rutaId, {
       where: { status: Status.ACTIVO },
     });
+
+    if (!existRuta) {
+      throw new NotFoundException('No existe la RUTA');
+    }
 
     await this._rutaRepository.update(rutaId, {
       status: Status.INACTIVO,

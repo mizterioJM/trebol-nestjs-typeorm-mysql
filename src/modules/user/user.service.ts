@@ -25,7 +25,7 @@ export class UserService {
 
   async get(userId: number): Promise<ReadUserDto> {
     if (!userId) {
-      throw new BadRequestException('Id necesario');
+      throw new BadRequestException('Id del Usuario es necesario');
     }
 
     const user: User = await this._userRepository.findOne(userId, {
@@ -33,7 +33,7 @@ export class UserService {
     });
 
     if (!user) {
-      throw new NotFoundException();
+      throw new NotFoundException('No existe Usuario');
     }
 
     return plainToClass(ReadUserDto, user);
