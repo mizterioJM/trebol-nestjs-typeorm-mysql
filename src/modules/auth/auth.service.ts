@@ -21,7 +21,7 @@ export class AuthService {
     private readonly _jwtService: JwtService,
   ) {}
 
-  async registro(registroDto: RegistroDto): Promise<void> {
+  async registro(registroDto: RegistroDto): Promise<boolean> {
     const { nDocument } = registroDto;
 
     const userExist = await this._authRepository.findOne({
@@ -32,7 +32,7 @@ export class AuthService {
       throw new BadRequestException('El Documento ya existe');
     }
 
-    return this._authRepository.register(registroDto);
+    return this._authRepository.register(registroDto) ? true : false;
   }
 
   async login(loginDto: LoginDto): Promise<{ token: string }> {

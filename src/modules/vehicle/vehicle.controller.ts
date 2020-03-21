@@ -31,7 +31,7 @@ export class VehicleController {
   }
 
   @Get()
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.GENERAL)
   @UseGuards(AuthGuard(), RoleGuard)
   getVehicles(): Promise<ReadVehicleDto[]> {
     return this._vehicleService.getVehicles();

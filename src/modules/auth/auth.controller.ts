@@ -22,7 +22,7 @@ export class AuthController {
   @Roles(RoleType.ADMIN)
   @UseGuards(AuthGuard(), RoleGuard)
   @UsePipes(ValidationPipe)
-  async registro(@Body() registroDto: RegistroDto): Promise<void> {
+  async registro(@Body() registroDto: RegistroDto): Promise<boolean> {
     return this._authService.registro(registroDto);
   }
 

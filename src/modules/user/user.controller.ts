@@ -24,7 +24,7 @@ export class UserController {
   constructor(private readonly _userService: UserService) {}
 
   @Get(':userId')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.GENERAL)
   @UseGuards(AuthGuard(), RoleGuard)
   getUser(@Param('userId', ParseIntPipe) userId: number): Promise<ReadUserDto> {
     return this._userService.get(userId);
@@ -38,7 +38,7 @@ export class UserController {
   }
 
   @Get('/filtro/apoyo')
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.GENERAL)
   @UseGuards(AuthGuard(), RoleGuard)
   getallApoyo(): Promise<ReadUserDto[]> {
     return this._userService.getAllApoyo();

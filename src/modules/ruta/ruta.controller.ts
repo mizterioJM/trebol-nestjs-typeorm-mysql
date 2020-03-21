@@ -31,7 +31,7 @@ export class RutaController {
   }
 
   @Get()
-  @Roles(RoleType.ADMIN)
+  @Roles(RoleType.ADMIN, RoleType.GENERAL)
   @UseGuards(AuthGuard(), RoleGuard)
   getRutas(): Promise<ReadRutaDto[]> {
     return this._rutaService.getRutas();
